@@ -14,6 +14,7 @@ An intelligent code review tool powered by Google's Gemini AI. Submit your code 
 - Checks code style and readability
 - Suggests security improvements
 - Provides actionable recommendations
+- corrects the original code in the editor itself
 
 🎨 **Modern User Interface**
 - Clean, intuitive design with dark theme
@@ -81,8 +82,8 @@ npm install
 
 Create `.env` file:
 ```
-GEMINI_API_KEY=your_gemini_api_key_here
-PORT=8000
+API_KEY=your_gemini_api_key_here
+SERVER_PORT=8000
 ```
 
 **3. Set up Frontend:**
@@ -91,9 +92,9 @@ cd ../frontend
 npm install
 ```
 
-Create `.env` file:
+Create `.env.local` file:
 ```
-REACT_APP_SERVER_URL=http://localhost:8000
+VITE_SERVER_API_URL=http://localhost:8000
 ```
 
 **4. Run locally:**
@@ -152,11 +153,10 @@ Response:
 The backend uses a carefully crafted system prompt to ensure consistent, high-quality code reviews:
 
 ```
-You are a senior developer with 7+ years of experience. 
-Review the code in terms of functionality, quality and readability. 
-Identify the total number of issues with the code including how many 
-critical issues are there. For each issue provide a short description 
-and resolution. Finally, give a score out of 100.
+You are a senior developer with 7+ years of experience. Review the code
+in terms of functionality, quality and readability. Identify the total number of issues which is
+equal to the sum of critical issues, performance issues and general info.For each issue provide a short description. Finally, give a score out of 100 to express how good the code is overall and also give the 
+correct version of the code.Make sure that the descriptions are concise and only give the most relevant description.Additionally, give any general information related to the code based on coding practices and industry standards. Return the response in the following manner: {rating: number, code: string, issues: total number of issues found, criticalIssues: number of critical issues,bugs:[{desc: string}], performanceIssues:[{desc:string}], generalInfo: [ {desc:string} ]}. If you recieve something that is not a code snippet or any other input which is not a code return an empty json {}.
 ```
 
 ---
@@ -198,21 +198,33 @@ codemuse/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── CodeEditor.jsx
-│   │   │   └── ReviewPanel.jsx
+│   │   │   ├── Bug.jsx
+│   │   │   └── Card.jsx
+|   |   |   └── EmptyReview.jsx
+|   |   |   └── Error.jsx
+|   |   |   └── Header.jsx
+|   |   |   └── Info.jsx
+|   |   |   └── Loader.jsx
+|   |   |   └── PerformanceBug.jsx
+|   |   |   └── Review.jsx
+|   |   |   └── ReviewLoader.jsx
+|   |   |   └── ReviewSummary.jsx
 │   │   ├── App.jsx
 │   │   └── index.css
-│   ├── .env
+│   │   └── main.jsx
+│   ├── .env.local
 │   └── package.json
 │
 ├── backend/
+│   ├── controller/
+│   │   └── app.controller.js
 │   ├── routes/
-│   │   └── review.js
+│   │   └── app.route.js
 │   ├── services/
-│   │   └── geminiService.js
-│   ├── middleware/
-│   │   └── validation.js
-│   ├── server.js
+│   │   └── ai.service.js
+│   ├── src/
+│   │   └── app.js
+│   ├── index.js
 │   ├── .env
 │   └── package.json
 │
@@ -226,41 +238,15 @@ codemuse/
 
 ### Backend (.env)
 ```
-GEMINI_API_KEY=your_api_key_here
-PORT=8000
+API_KEY=your_api_key_here
+SERVER_PORT=8000
 NODE_ENV=production
 ```
 
-### Frontend (.env)
+### Frontend (.env.local)
 ```
-REACT_APP_SERVER_URL=https://your-backend-url.vercel.app
+VITE_SERVER_API_URL=http://localhost:8000
 ```
-
----
-
-## Deployment
-
-### Deploy Frontend to Vercel
-```bash
-cd frontend
-npm run build
-vercel deploy
-```
-
-### Deploy Backend to Vercel
-
-1. Create `vercel.json` in backend root:
-```json
-{
-  "version": 2,
-  "builds": [{"src": "server.js", "use": "@vercel/node"}],
-  "routes": [{"src": "/(.*)", "dest": "server.js"}]
-}
-```
-
-2. Push to GitHub and connect to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy
 
 ---
 
@@ -303,7 +289,6 @@ def calculate_sum(numbers):
 - [ ] Batch code file uploads
 - [ ] GitHub integration for real repository reviews
 - [ ] Custom review templates
-- [ ] Code refactoring suggestions with before/after
 - [ ] Team collaboration features
 - [ ] API rate limiting and usage analytics
 
@@ -321,12 +306,6 @@ Contributions are welcome! Please:
 ---
 
 ## Troubleshooting
-
-### "Cannot GET /" Error
-Make sure your backend has a root route:
-```javascript
-app.get('/', (req, res) => res.json({ message: 'API running' }));
-```
 
 ### 503 Service Unavailable
 - Check your `REACT_APP_SERVER_URL` is correct
