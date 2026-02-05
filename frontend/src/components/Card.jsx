@@ -8,6 +8,7 @@ import CodeComponent from './CodeComponent';
 
 const LANGUAGES=["python", "javaScript", "c", "c#", "sql", "html", "css"];
 const SERVERURL = 'https://code-reviewer-p46x.vercel.app';
+// const SERVERURL='http://127.0.0.1:8000'
 
 function Card(props){
 
@@ -52,14 +53,14 @@ function Card(props){
             let body = null;
             props.updateLoading(false);
 
-            if(err.request){
-                errStatus=503;
-                body='Service Unavailable'
-            }
-            else{
-                errStatus = err.response.status;
-                body = err.response.data.message;
-            }
+            // if(err.request){
+            //     errStatus=503;
+            //     body='Service Unavailable'
+            // }
+            // else{
+            // }
+            errStatus = err.response.status;
+            body = err.response.data.message;
             props.setServerError({errStatus, body});
     
         })

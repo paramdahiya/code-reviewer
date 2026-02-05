@@ -10,7 +10,18 @@ const getResponse = async (req, res)=>{
     }
     catch(e){
         console.log(e);
-        res.status(e.error.code).json({"message": e.error.message});
+        console.log('here');
+        const statusCode = e.error?.code || e?.status || 500;
+        const message = e.error?.message || 'Something went wrong';
+
+        console.log(statusCode);
+        if (statusCode === 429) {
+            return res.status(429).json({ 
+                message: 'Daily limit reached. Please try again tomorrow.',
+                retryAfter: 86400 // seconds until reset
+            });
+        }
+        res.status(statusCode).json({"message": message});
     }
 }
 

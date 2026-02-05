@@ -22,9 +22,8 @@ async function promptAi(prompt) {
         });
         return (JSON.parse(response.text));
     }catch(e){
-        console.log(e);
-        console.log('caught');
-        return e;
+        console.log(e?.error?.code || e?.status || 500);
+        throw e;
     }
 }
 
