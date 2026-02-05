@@ -7,7 +7,7 @@ import Loader from './Loader';
 import CodeComponent from './CodeComponent';
 
 const LANGUAGES=["python", "javaScript", "c", "c#", "sql", "html", "css"];
-const SERVERURL = import.meta.env.VITE_SERVERURL;
+const SERVERURL = 'https://code-reviewer-p46x.vercel.app';
 
 function Card(props){
 
