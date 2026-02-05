@@ -1,7 +1,5 @@
 # CodeMuse - AI-Powered Code Reviewer
 
-![CodeMuse Logo](https://your-repo-url/codemuse-logo.svg)
-
 An intelligent code review tool powered by Google's Gemini AI. Submit your code and get instant, actionable feedback on bugs, performance issues, code style, and best practices.
 
 **Live Demo:** [https://frontend-nine-peach-28.vercel.app/](https://frontend-nine-peach-28.vercel.app/)
