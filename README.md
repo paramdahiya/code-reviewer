@@ -1,0 +1,380 @@
+# CodeMuse - AI-Powered Code Reviewer
+
+An intelligent code review tool powered by Google's Gemini AI. Submit your code and get instant, actionable feedback on bugs, performance issues, code style, and best practices.
+
+**Live Demo:** [https://frontend-nine-peach-28.vercel.app/](https://frontend-nine-peach-28.vercel.app/)
+
+---
+
+## Features
+
+✨ **AI-Powered Code Analysis**
+- Detects bugs and logic errors
+- Identifies performance issues
+- Checks code style and readability
+- Suggests security improvements
+- Provides actionable recommendations
+
+🎨 **Modern User Interface**
+- Clean, intuitive design with dark theme
+- Syntax-highlighted code editor (Monaco Editor)
+- Real-time feedback display
+- Responsive design (desktop and mobile)
+
+🔒 **Smart Input Validation**
+- Detects empty code submissions
+- Validates that input is actual code
+- Prevents API abuse with clear error messages
+
+⚡ **Fast & Reliable**
+- Instant AI analysis (2-5 seconds)
+- Graceful error handling
+- Loading states with visual feedback
+
+🌐 **Multi-Language Support**
+- JavaScript, Python, Java, C++, TypeScript, and more
+- Auto-detected or user-selected language
+
+---
+
+## Tech Stack
+
+### Frontend
+- **React** - UI framework
+- **Tailwind CSS** - Styling and responsive design
+- **Monaco Editor** - Code editor with syntax highlighting
+- **Axios** - HTTP requests
+- **Vite** - Build tool
+
+### Backend
+- **Node.js** - Runtime
+- **Express.js** - Web framework
+- **Google Gemini 2.0 Flash** - AI model for code analysis
+- **Zod** - Schema validation
+- **CORS** - Cross-origin resource sharing
+
+### Deployment
+- **Vercel** - Frontend and backend hosting
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Google Gemini API key ([Get one here](https://ai.google.dev/))
+
+### Installation
+
+**1. Clone the repository:**
+```bash
+git clone https://github.com/yourusername/codemuse.git
+cd codemuse
+```
+
+**2. Set up Backend:**
+```bash
+cd backend
+npm install
+```
+
+Create `.env` file:
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+PORT=8000
+```
+
+**3. Set up Frontend:**
+```bash
+cd ../frontend
+npm install
+```
+
+Create `.env` file:
+```
+REACT_APP_SERVER_URL=http://localhost:8000
+```
+
+**4. Run locally:**
+
+Terminal 1 (Backend):
+```bash
+cd backend
+npm start
+```
+
+Terminal 2 (Frontend):
+```bash
+cd frontend
+npm run dev
+```
+
+Visit `http://localhost:5173`
+
+---
+
+## How It Works
+
+### User Flow
+1. User selects programming language
+2. Pastes code into the editor
+3. Clicks "Review Code"
+4. Backend sends code to Gemini AI with system instructions
+5. AI analyzes code and returns structured JSON response
+6. Frontend displays results with categorized issues
+
+### API Endpoint
+
+**POST `/api/get-response`**
+
+Request:
+```json
+{
+  "code": "function hello() { console.log('world'); }",
+  "language": "javascript"
+}
+```
+
+Response:
+```json
+{
+  "issuesFound": 0,
+  "criticalIssues": 0,
+  "score": 95,
+  "bugs": [],
+  "performanceIssues": []
+}
+```
+
+### AI System Prompt
+
+The backend uses a carefully crafted system prompt to ensure consistent, high-quality code reviews:
+
+```
+You are a senior developer with 7+ years of experience. 
+Review the code in terms of functionality, quality and readability. 
+Identify the total number of issues with the code including how many 
+critical issues are there. For each issue provide a short description 
+and resolution. Finally, give a score out of 100.
+```
+
+---
+
+## Features Explained
+
+### Error Handling
+
+**Empty Code Detection:**
+- Prevents submission of empty code
+- Shows user-friendly error message
+
+**Non-Code Input Validation:**
+- Checks if input is actual code
+- Rejects gibberish or natural language
+- Provides feedback to user
+
+**API Error Handling:**
+- Graceful fallback on API failures
+- Loading states during processing
+- Timeout handling for slow responses
+
+### Code Review Categories
+
+| Category | Example | Severity |
+|----------|---------|----------|
+| **Bugs** | Missing null checks, logic errors | Critical |
+| **Performance** | Inefficient loops, O(n²) algorithms | Warning |
+| **Style** | Naming conventions, formatting | Info |
+| **Security** | SQL injection risk, unsafe operations | Critical |
+| **Best Practices** | Use const over var, error handling | Info |
+
+---
+
+## Project Structure
+
+```
+codemuse/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── CodeEditor.jsx
+│   │   │   └── ReviewPanel.jsx
+│   │   ├── App.jsx
+│   │   └── index.css
+│   ├── .env
+│   └── package.json
+│
+├── backend/
+│   ├── routes/
+│   │   └── review.js
+│   ├── services/
+│   │   └── geminiService.js
+│   ├── middleware/
+│   │   └── validation.js
+│   ├── server.js
+│   ├── .env
+│   └── package.json
+│
+├── .gitignore
+└── README.md
+```
+
+---
+
+## Environment Variables
+
+### Backend (.env)
+```
+GEMINI_API_KEY=your_api_key_here
+PORT=8000
+NODE_ENV=production
+```
+
+### Frontend (.env)
+```
+REACT_APP_SERVER_URL=https://your-backend-url.vercel.app
+```
+
+---
+
+## Deployment
+
+### Deploy Frontend to Vercel
+```bash
+cd frontend
+npm run build
+vercel deploy
+```
+
+### Deploy Backend to Vercel
+
+1. Create `vercel.json` in backend root:
+```json
+{
+  "version": 2,
+  "builds": [{"src": "server.js", "use": "@vercel/node"}],
+  "routes": [{"src": "/(.*)", "dest": "server.js"}]
+}
+```
+
+2. Push to GitHub and connect to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
+---
+
+## Usage Examples
+
+### JavaScript Code Review
+```javascript
+function getData(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i]);
+  }
+}
+```
+
+**AI Feedback:**
+- Use `for...of` or `forEach` instead of traditional loop
+- Consider early return for performance
+- Add input validation
+
+### Python Code Review
+```python
+def calculate_sum(numbers):
+  total = 0
+  for num in numbers:
+    total = total + num
+  return total
+```
+
+**AI Feedback:**
+- Use Python's built-in `sum()` function
+- Add type hints
+- Add docstring
+
+---
+
+## Future Improvements
+
+- [ ] User authentication and review history
+- [ ] Shareable review links
+- [ ] Batch code file uploads
+- [ ] GitHub integration for real repository reviews
+- [ ] Custom review templates
+- [ ] Code refactoring suggestions with before/after
+- [ ] Team collaboration features
+- [ ] API rate limiting and usage analytics
+
+---
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## Troubleshooting
+
+### "Cannot GET /" Error
+Make sure your backend has a root route:
+```javascript
+app.get('/', (req, res) => res.json({ message: 'API running' }));
+```
+
+### 503 Service Unavailable
+- Check your `REACT_APP_SERVER_URL` is correct
+- Verify backend is deployed on Vercel
+- Check Vercel logs for errors
+
+### Syntax Highlighting Not Working
+Make sure Monaco Editor is installed:
+```bash
+npm install @monaco-editor/react
+```
+
+### Gemini API Errors
+- Verify your API key in `.env`
+- Check API rate limits
+- Ensure you have Gemini 2.0 Flash access
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## Author
+
+**Param Dahiya**
+- GitHub: [@paramdahiya](https://github.com/paramdahiya)
+- LinkedIn: [param-dahiya](https://linkedin.com/in/param-dahiya)
+
+---
+
+## Acknowledgments
+
+- Google Gemini AI for powerful code analysis
+- Monaco Editor for excellent code editing experience
+- Vercel for seamless deployment
+- The open-source community for amazing tools
+
+---
+
+## Support
+
+Found a bug or have a feature request? 
+- Open an [issue](https://github.com/paramdahiya/codemuse/issues)
+- Check existing issues first
+
+---
+
+**Built with ❤️ for developers, by a developer**
