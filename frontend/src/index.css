@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+body{
+  background-color: #0f0f23;
+}
+
+.loader{
+  animation-name: loading;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes loading {
+  0% {
+  box-shadow: 0 0 5px 5px rgba(59, 130, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 5px 10px rgba(59, 130, 246, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 5px 5px rgba(59, 130, 246, 0.4);
+  }
+}
