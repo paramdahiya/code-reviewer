@@ -1,5 +1,6 @@
 import Loader from './Loader';
 
+// placeholder card for when there is no review to show
 const EmptyReview = () => {
     return (
         <div className='border-1 border-[#00d4ff] border-solid rounded-xl w-full md:w-3/4 p-5 mx-auto'>
